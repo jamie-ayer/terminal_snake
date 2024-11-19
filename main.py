@@ -2,8 +2,8 @@ from Game import *
 
 def main():
     
-    g = Game(500, 500)
-    g.render()
+    g = Game(400, 400)
+    #g.render()
     
 if __name__ == "__main__":
     main()
