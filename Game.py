@@ -11,23 +11,15 @@ class Game:
     def __init__(self, h, w, root: Tk) -> None:
         self._height = h
         self._width = w
-        self._snake = Snake()
-        self._food = Food()
-        self.score = 0
-        
-        self._direction = 'Right'
         
         self.root = root
         self.root.title("Snake")
-        self.game_over = False
-        self.grow = False
+        self.score = 0
         
         self.board()
         self.root.bind('<Key>', self.change_direction)
-        
-        self.draw_food()
-        
-        self.game_loop()
+
+        self.game_setup()
         
     def change_direction(self, event):
         print(f'inside change direction | key: {event.char}')
@@ -61,12 +53,18 @@ class Game:
         if head == tuple(self._food.c):
             print('WOOOOOOOOOOOOOOOOO')
             self.score += 1
+            self.scoreForLabel.set(f'Score: {self.score}')
             self.grow = True
             self.draw_food()
         
     def board(self):
         self.canvas = Canvas(self.root, background='white', width=self._width, height=self._height+20)
         self.canvas.pack() # Doesn't seem to do anything
+        
+        self.scoreForLabel = StringVar()
+        scoreLabel = Label(self.root, textvariable=self.scoreForLabel)
+        scoreLabel.place(x=200, y=400)
+        
         
         for line in range(0, self._width, 20):
             self.canvas.create_line([(line, 0), (line, self._height)], fill='black', tags='grid_line_w')
@@ -79,8 +77,7 @@ class Game:
         sq = SQUARE_SIZE
         c = self._snake.coord
         self.canvas.delete('snake')
-        scoreLabel = Label(self.root, text=f'Score: {self.score}')
-        scoreLabel.place(x=200, y=400)
+        
         for i, (x, y) in enumerate(c):
             if i == 0:
                 self.canvas.create_rectangle(x, y, x+sq, y+sq, fill='red', tags='snake')
@@ -111,18 +108,25 @@ class Game:
         print(f'\nFood spawned at {self._food.c}\n')
         x = self._food.x ; y = self._food.y
         self.canvas.create_oval(x, y, x+sq, y+sq, fill='green', tags='food')
+    
+    def game_setup(self):
+        
+        self.game_over = False
+        self._snake = Snake()
+        self._food = Food()
+        self.score = 0
+        self._direction = 'Right'
+        self.draw_food()
+        self.grow = False
+        self.scoreForLabel.set(f'Score: {self.score}')
+        
+        self.game_loop()
           
     def restart(self):
         
         self.rBut.destroy()
         self.canvas.delete('GOText')
-        self.game_over = False
-        self._snake = Snake()
-        self._food = Food()
-        self.score = 0
-        self.draw_food()
-        
-        self.game_loop()
+        self.game_setup()
          
     def game_ova(self):
         
