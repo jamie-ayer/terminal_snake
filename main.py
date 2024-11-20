@@ -1,9 +1,13 @@
 from Game import *
+from tkinter import *
 
 def main():
     
-    g = Game(400, 400)
-    #g.render()
+    root = Tk()
+    
+    Game(400, 400, root)
+    
+    root.mainloop()
     
 if __name__ == "__main__":
     main()
